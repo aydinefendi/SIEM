@@ -86,3 +86,11 @@ pcs_coursework_2/
 ├── detection_rules.json - Configuration file
 └── main.py             - Application entry point
 ```
+## License
+
+This project is for educational purposes.
+
+## Author
+
+Aydin Efendi
+
