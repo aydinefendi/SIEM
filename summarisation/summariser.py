@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Dict, Any
 from collections import defaultdict
 
-
 class Summariser:
     
     def generate_summary(self, anomalies, entries):
@@ -28,9 +27,9 @@ class Summariser:
     def format_summary(self, summary):
         """Format summary as human readable text"""
         lines = []
-        lines.append("=" * 80)
+        lines.append("=" * 50)
         lines.append("Log analysis summary")
-        lines.append("=" * 80)
+        lines.append("=" * 50)
         lines.append(f"Generated: {summary['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
         lines.append(f"Total log entries processed: {summary['total_entries']}")
         lines.append(f"Total anomalies detected: {summary['total_anomalies']}")
@@ -49,9 +48,9 @@ class Summariser:
         lines.append("")
         
         if summary["anomalies"]:
-            lines.append("=" * 80)
+            lines.append("=" * 50)
             lines.append("Detailed anomaly report")
-            lines.append("=" * 80)
+            lines.append("=" * 50)
             lines.append("")
             
             anomalies_by_rule = defaultdict(list)
@@ -61,7 +60,7 @@ class Summariser:
             
             for rule_name, rule_anomalies in sorted(anomalies_by_rule.items()):
                 lines.append(f"\n{rule_name.upper().replace('_', ' ')}")
-                lines.append("-" * 80)
+                lines.append("-" * 50)
                 
                 for anomaly in rule_anomalies[:10]:
                     entry = anomaly.get("entry", {})

@@ -1,6 +1,7 @@
 {
   "sql_injection": {
     "enabled": true,
+    "severity": "critical",
     "patterns": [
       "' OR '1'='1",
       "['\"]\\s*--",
