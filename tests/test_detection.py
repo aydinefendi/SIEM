@@ -12,16 +12,22 @@ class TestDetector(unittest.TestCase):
         self.temp_rules = {
             "sql_injection": {
                 "enabled": True,
-                "patterns": ["' OR '1'='1"]
+                "patterns": ["admin'--", "' OR '1'='1"],
+                "severity": "critical"
             },
             "xss": {
                 "enabled": True,
-                "patterns": ["<script>alert('xss')</script>"]
+                "patterns": ["<script>alert('xss')</script>", "<script>alert(1)</script>", "<script>"],
+                "severity": "high"
             },
             "path_traversal": {
                 "enabled": True,
-                "patterns": ["../../etc/passwd"]
-            }
+                "patterns": ["../../etc/passwd"],
+                "severity": "high"
+            },
+            "failed_login": {"enabled": False},
+            "blacklist": {"enabled": False},
+            "out_of_business_hours": {"enabled": False}
         }
         
         self.temp_rules_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json')
@@ -67,7 +73,7 @@ class TestDetector(unittest.TestCase):
         anomalies = self.detector._detect_sql_injection(entries)
         
         self.assertEqual(len(anomalies), 1)
-        self.assertIn("payload", anomalies[0]["reason"])
+        self.assertEqual(anomalies[0]["rule_name"], "sql_injection")
     
     def test_detect_xss_in_url(self):
         """Test XSS detection in URL"""
