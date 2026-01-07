@@ -1,0 +1,48 @@
+{
+  "sql_injection": {
+    "enabled": true,
+    "patterns": [
+      "' OR '1'='1",
+      "['\"]\\s*--",
+      "['\"]\\s*;\\s*(DROP|DELETE|UPDATE)"
+    ]
+  },
+  "xss": {
+    "enabled": true,
+    "patterns": [
+      "<script[^>]*>",
+      "<script>alert('xss')</script>"
+    ]
+  },
+  "path_traversal": {
+    "enabled": true,
+    "patterns": [
+      "../../etc/passwd",
+      "\\.\\./\\.\\./etc/passwd"
+    ]
+  },
+  "failed_login": {
+    "enabled": true,
+    "threshold": 5,
+    "time_window_minutes": 15,
+    "description": "Detects repeated failed login attempts from the same IP address within a time window"
+  },
+  "blacklist": {
+    "enabled": true,
+    "ips": [
+      "192.168.1.100",
+      "10.0.0.50"
+    ],
+    "description": "Detects access attempts from blacklisted IP addresses"
+  },
+  "out_of_business_hours": {
+    "enabled": true,
+    "description": "Detects access attempts occurring outside business hours"
+  },
+  "business_hours": {
+    "start": "09:00",
+    "end": "17:00",
+    "description": "Business hours configuration (24-hour format)"
+  }
+}
+
