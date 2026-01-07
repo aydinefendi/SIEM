@@ -55,5 +55,7 @@ def main():
         if len(high_alerts) > 5:
             print(f"\n... and {len(high_alerts) - 5} more high severity alerts")
         
-    return {"anomalies": anomalies, "alerts": alerts, "summary": summary}
+        return {"anomalies": anomalies, "alerts": alerts, "summary": summary}
 
+if __name__ == "__main__":
+    main()
