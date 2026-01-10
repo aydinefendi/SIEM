@@ -26,6 +26,7 @@ class Detector:
             self.business_hours_end = time(*map(int, end.split(':')))
     
     def _get_default_config(self):
+        """Return default detection rules configuration"""
         return {
             "sql_injection": {"enabled": True, "patterns": [r"' OR '1'='1", r"admin'--"], "severity": "critical"},
             "xss": {"enabled": True, "patterns": [r"<script[^>]*>", r"<script>alert\('xss'\)</script>"], "severity": "high"},
@@ -37,6 +38,7 @@ class Detector:
         }
     
     def run(self, entries):
+        """Run all enabled detection rules on log entries"""
         anomalies = []
         
         self._track_failed_logins(entries)
@@ -62,6 +64,7 @@ class Detector:
         return anomalies
     
     def _track_failed_logins(self, entries):
+        """Track failed login attempts by IP address"""
         for entry in entries:
             is_failed = False
             
@@ -79,12 +82,14 @@ class Detector:
                 self.failed_login_attempts[ip].append(entry.get("timestamp"))
     
     def _match_pattern(self, pattern, text):
+        """Match a regex pattern against text, fallback to simple string search"""
         try:
             return bool(re.search(pattern, text, re.IGNORECASE))
         except re.error:
             return pattern.lower() in text.lower()
     
     def _detect_pattern_based(self, entries, rule_name):
+        """Generic pattern-based detection for SQL injection, XSS, path traversal"""
         anomalies = []
         rule_config = self.config.get(rule_name, {})
         patterns = rule_config.get("patterns", [])
@@ -113,15 +118,19 @@ class Detector:
         return anomalies
     
     def _detect_sql_injection(self, entries):
+        """Detect SQL injection attempts in URLs and payloads"""
         return self._detect_pattern_based(entries, "sql_injection")
     
     def _detect_xss(self, entries):
+        """Detect cross-site scripting attempts in URLs and payloads"""
         return self._detect_pattern_based(entries, "xss")
     
     def _detect_path_traversal(self, entries):
+        """Detect directory traversal attempts in URLs and payloads"""
         return self._detect_pattern_based(entries, "path_traversal")
     
     def _detect_repeated_failed_logins(self, entries):
+        """Detect multiple failed login attempts from same IP within time window"""
         anomalies = []
         threshold = self.config.get("failed_login", {}).get("threshold", 5)
         time_window = self.config.get("failed_login", {}).get("time_window_minutes", 15)
@@ -156,6 +165,7 @@ class Detector:
         return anomalies
     
     def _detect_blacklisted_access(self, entries):
+        """Detect access attempts from blacklisted IP addresses"""
         anomalies = []
         blacklisted = set(self.config.get("blacklist", {}).get("ips", []))
         
@@ -172,6 +182,7 @@ class Detector:
         return anomalies
     
     def _detect_out_of_business_hours(self, entries):
+        """Detect access attempts occurring outside configured business hours"""
         anomalies = []
         
         for entry in entries:
